@@ -1,5 +1,5 @@
 use std::io;
-//use rand::Rng;
+use rand::Rng;
 
 fn main() {
     println!("Please Select an Option");
@@ -14,10 +14,6 @@ fn main() {
     let choice: u32 = match input.trim().parse() {
         Ok(num) => num,
         Err(_) => 0
-        //_ => {
-        //    println!("Hey, that's not an option. Please try again!");
-        //    main()
-        //}
     };
 
     match choice {
@@ -41,24 +37,28 @@ fn game(ai_player: bool) {
     let max_bad_guesses = 6;
     let mut guesses = 0;
     let mut bad_guesses = 0;
-    
+
+    let incorrect_letters = [" "];
+    let correct_letters = [" "];
+
     // TODO: change the generator range to be from 0 to len of words
-    //let word_num = rand::thread_rng().gen_range(0..4);
-    let word_num = 1;
+    let word_num = rand::thread_rng().gen_range(0..words.len());
+    //let word_num = 1;
     let word2guess = words[word_num];
     while guessed == false {
         if bad_guesses >= max_bad_guesses {
             println!("You were unable to guess the word \"{}\" in {} guesses!", word2guess, max_bad_guesses);
             break;
         }
-        
-       println!("{}", word2guess);
+       println!("{}", "_ ".repeat(word2guess.len()));
+       println!("Incorrect Letters: {}", incorrect_letters.join(" "));
+       println!("Correct Letters: {}", correct_letters.join(" "));
 
        let mut guess = String::new();
        io::stdin()
             .read_line(&mut guess)
             .expect("Failed to read line!");
-        guess = guess.chomp();
+        guess.pop();
 
        if guess == word2guess {
            guesses+=1;
@@ -69,14 +69,12 @@ fn game(ai_player: bool) {
            if word2guess.contains(&guess) {
                 println!("Yes! {} is in the word!", guess);
         }
+        else {
+            println!("No, {} is not in the word.", guess);
+            bad_guesses += 1;
+        }
         guesses += 1;
-       }
-       else {
-           println!("No, {} is not in the word.", guess);
-           bad_guesses += 1;
-           guesses += 1;
-       }
-
+    };
     //if ai_player == true {
     //}   
     }
